@@ -1,21 +1,21 @@
-FROM debian:9
+ARG DEBIAN_BUSTER_IMAGE_TAG=8-jre-slim
+FROM openjdk:${DEBIAN_BUSTER_IMAGE_TAG}
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-      openjdk-8-jdk \
       net-tools \
       curl \
       netcat \
       gnupg \
     && rm -rf /var/lib/apt/lists/*
       
-ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/
+#ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/
 
-RUN curl -O https://dist.apache.org/repos/dist/release/hadoop/common/KEYS
+RUN curl -O https://downloads.apache.org/hadoop/common/KEYS
 
 RUN gpg --import KEYS
 
-ENV HADOOP_VERSION 3.1.2
-ENV HADOOP_URL https://www.apache.org/dist/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz
+ENV HADOOP_VERSION 3.3.6
+ENV HADOOP_URL https://downloads.apache.org/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz
 
 RUN set -x \
     && curl -fSL "$HADOOP_URL" -o /tmp/hadoop.tar.gz \
@@ -37,7 +37,6 @@ ENV USER=root
 ENV PATH $HADOOP_PREFIX/bin/:$PATH
 
 ADD entrypoint.sh /entrypoint.sh
-
 RUN chmod a+x /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
