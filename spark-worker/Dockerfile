@@ -1,4 +1,4 @@
-FROM spark-base:2.4.4
+FROM spark-base:spark3.5.0-hadoop3-java8
 
 ENV SPARK_HOME /opt/spark
 ENV SPARK_WORKER_WEBUI_PORT 8081

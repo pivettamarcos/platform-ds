@@ -10,4 +10,5 @@ services:
         http_proxy:
         https_proxy:
         ftp_proxy:
-    image: spark-base:2.4.4
+    image: spark-base:spark3.5.0-hadoop3-java8
+    container_name: spark-base

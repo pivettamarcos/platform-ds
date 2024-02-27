@@ -1,6 +1,4 @@
-FROM hadoop-base:3.1.1
-
-MAINTAINER Ivan Ermilov <ivan.s.ermilov@gmail.com>
+FROM hadoop-base:hadoop3.3.6-java8
 
 HEALTHCHECK CMD curl -f http://localhost:9864/ || exit 1
 

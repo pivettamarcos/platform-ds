@@ -2,7 +2,7 @@
 version: '3.1'
 
 services:
-  spark-base:
+  hadoop-base:
     build:
       context: .
       dockerfile: Dockerfile
@@ -10,4 +10,5 @@ services:
         http_proxy:
         https_proxy:
         ftp_proxy:
-    image: hadoop-base:3.1.1
+    image: hadoop-base:hadoop3.3.6-java8
+    container_name: hadoop-base

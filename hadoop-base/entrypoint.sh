@@ -41,6 +41,9 @@ configure /etc/hadoop/mapred-site.xml mapred MAPRED_CONF
 if [ "$MULTIHOMED_NETWORK" = "1" ]; then
     echo "Configuring for multihomed network"
 
+    # CORE
+    addProperty /etc/hadoop/core-site.xml fs.default.name hdfs://namenode:9000
+
     # HDFS
     addProperty /etc/hadoop/hdfs-site.xml dfs.namenode.rpc-bind-host 0.0.0.0
     addProperty /etc/hadoop/hdfs-site.xml dfs.namenode.servicerpc-bind-host 0.0.0.0

@@ -15,11 +15,13 @@ services:
     container_name: jupyter
     hostname: jupyter
     ports:
+      - "4040:4040"
       - "10000:8888"
     environment:
       - JUPYTER_ENABLE_LAB=yes 
+      - PASSWORD=marcos
     volumes:
-      - C:/Users/Marcos Pivetta/Desktop/courses:/home/jovyan/work
+      - C:/Users/marco/Área de Trabalho/courses:/home/marcos/work
 
   spark-master:
     build:
@@ -29,7 +31,7 @@ services:
         http_proxy:
         https_proxy:
         ftp_proxy:
-    image: spark-master:2.4.4
+    image: spark-master:spark3.5.0-hadoop3-java8
     container_name: spark-master
     hostname: spark-master
     ports:
@@ -47,7 +49,7 @@ services:
         http_proxy:
         https_proxy:
         ftp_proxy:
-    image: spark-worker:2.4.4
+    image: spark-worker:spark3.5.0-hadoop3-java8
     container_name: spark-worker-1
     hostname: spark-worker-1
     depends_on:
@@ -59,9 +61,7 @@ services:
        - ${DATA_VOLUME_SPARK}:/opt/spark-data
 
   spark-worker-2:
-    depends_on:
-      - spark-master
-    image: spark-worker:2.4.4
+    image: spark-worker:spark3.5.0-hadoop3-java8
     container_name: spark-worker-2
     hostname: spark-worker-2
     depends_on:
@@ -73,7 +73,7 @@ services:
        - ${DATA_VOLUME_SPARK}:/opt/spark-data
 
   namenode:
-    image: platform-ds/hadoop-namenode:2.0.0-hadoop3.1.1-java8
+    image: hadoop-namenode:hadoop3.3.6-java8
     container_name: namenode
     build:
       context: ./namenode
@@ -94,7 +94,7 @@ services:
       - 50070:50070
 
   datanode-1:
-    image: platform-ds/hadoop-datanode:2.0.0-hadoop3.1.1-java8
+    image: hadoop-datanode:hadoop3.3.6-java8
     build:
       context: ./datanode
       dockerfile: Dockerfile
@@ -114,7 +114,7 @@ services:
       - 50071:50075
 
   datanode-2:
-    image: platform-ds/hadoop-datanode:2.0.0-hadoop3.1.1-java8
+    image: hadoop-datanode:hadoop3.3.6-java8
     build:
       context: ./datanode
       dockerfile: Dockerfile
@@ -134,16 +134,57 @@ services:
       - 50072:50075
 
   resourcemanager:
+    build:
+      context: ./resourcemanager
+      dockerfile: Dockerfile
+      args:
+        http_proxy:
+        https_proxy:
+        ftp_proxy:
     depends_on:
       - namenode
-    image: bde2020/hadoop-resourcemanager:2.0.0-hadoop3.1.2-java8
+    image: hadoop-resourcemanager:hadoop3.3.6-java8
     container_name: resourcemanager
     environment:
-      SERVICE_PRECONDITION: "namenode:9870 datanode-1:9864 datanode-2:9864"
+      SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode-1:9864 datanode-2:9864"
     env_file:
       - .env
     ports:
       - 8088:8088
+  
+  nodemanager1:
+    image: hadoop-nodemanager:hadoop3.3.6-java8
+    build:
+      context: ./nodemanager
+      dockerfile: Dockerfile
+      args:
+        http_proxy:
+        https_proxy:
+        ftp_proxy:
+    container_name: nodemanager
+    restart: always
+    environment:
+      SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode-1:9864 datanode-2:9864 resourcemanager:8088"
+    env_file:
+      - .env
+
+  historyserver:
+    image: hadoop-historyserver:hadoop3.3.6-java8
+    build:
+      context: ./historyserver
+      dockerfile: Dockerfile
+      args:
+        http_proxy:
+        https_proxy:
+        ftp_proxy:
+    container_name: historyserver
+    restart: always
+    environment:
+      SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode-1:9864 datanode-2:9864 resourcemanager:8088"
+    volumes:
+      - hadoop_historyserver:/hadoop/yarn/timeline
+    env_file:
+      - .env
 
 volumes:
   datanode-1:
@@ -152,6 +193,7 @@ volumes:
   spark-apps:
   spark-data:
   jupyter-work:
+  hadoop_historyserver:
 
 networks:
   default:
