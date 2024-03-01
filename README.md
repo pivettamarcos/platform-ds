@@ -1,6 +1,6 @@
 # platform-ds
 
-Datascience environment managed by Docker and Docker-compose. This platform can be used for testing and exploration by any datascience team. Easy to deploy on a linux serveur. 
+Datascience environment managed by Docker and Docker-compose. This stack creates a standalone Spark cluster with 2 workers, 1 master and 1 driver (jupyterlab). It also creates a hadoop yarn cluster with: 1 resource manager; 1 node manager with 1 namenode, 1 data node; a history server.
 
 ### Prerequisites
 

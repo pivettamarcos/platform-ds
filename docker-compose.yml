@@ -93,7 +93,7 @@ services:
       - 9000:9000  
       - 50070:50070
 
-  datanode-1:
+  datanode:
     image: hadoop-datanode:hadoop3.3.6-java8
     build:
       context: ./datanode
@@ -112,26 +112,6 @@ services:
     ports:
       - 9871:9864
       - 50071:50075
-
-  datanode-2:
-    image: hadoop-datanode:hadoop3.3.6-java8
-    build:
-      context: ./datanode
-      dockerfile: Dockerfile
-      args:
-        http_proxy:
-        https_proxy:
-        ftp_proxy:
-    container_name: datanode-2
-    depends_on:
-      - namenode
-    volumes:
-      - "datanode-2:/hadoop/dfs/data"
-    env_file:
-      - .env    
-    ports:
-      - 9872:9864
-      - 50072:50075
 
   resourcemanager:
     build:
