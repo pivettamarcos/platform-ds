@@ -21,7 +21,7 @@ services:
       - JUPYTER_ENABLE_LAB=yes 
       - PASSWORD=marcos
     volumes:
-      - C:/Users/marco/Área de Trabalho/courses:/home/marcos/work
+      - C:/Users/marco/Área de Trabalho/courses:/home/jovyan/work
 
   spark-master:
     build:
