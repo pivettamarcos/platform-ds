@@ -75,10 +75,10 @@ lines = sc.textFile("hdfs://namenode:9000/<your_path_to_the_file>")
 
 ### Quick Start HDFS:
 - Copy breweries.csv to the namenode.
-  docker cp data/european_country_level_simulated_heating_demand/when2heat.csv namenode:when2heat.csv
+  docker cp data/1/cardio_base.csv namenode:cardio_base.csv
 - Go to the bash shell on the namenode with that same Container ID of the namenode.
   docker exec -it namenode bash
 - Create a HDFS directory /data/.
   hdfs dfs -mkdir -p /data/
-- Copy when2heat.csv to HDFS:
-  hdfs dfs -put when2heat.csv /data/when2heat.csv
+- Copy cardio_base.csv to HDFS:
+  hdfs dfs -put cardio_base.csv /data/cardio_base.csv
